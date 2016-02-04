@@ -1,0 +1,151 @@
+<template name = "navigation">
+    <nav class="navbar navbar-default navbar-fixed-top main-topbar">
+        <div class="col-xs-12">
+            <div class="navbar-header col-xs-2">
+                <a class="navbar-brand" href="#" data-nav-brand-logo>
+                    <img alt="Brand" class = "pull-left" src="eglobe.png">
+                </a>
+                {{#if currentUser}}
+                    <script>
+                        var src = "";
+                        if(Meteor.user().profile.gender.toUpperCase() == "F")
+                        {
+                            src = "female-user-icon-clip-art.jpg"
+                        }
+                        else
+                        {
+                            src = "male-user-icon-clip-art.jpg"
+                        }
+                        $("[data-nav-brand-logo] img").attr("src", src);
+                    </script>
+                {{else}}
+                    <!-- Well.. Need not do anything -->
+                {{/if}}
+            </div>
+            <div class = "col-xs-8 site-heading">
+                <h2>Travel on Budget</h2>
+            </div>
+            {{#if currentUser}}
+                <div class="col-xs-2 dropdown">
+                    <a class="dropdown-toggle settings-button pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <img alt="Brand" src="gear.png">
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="#" class = "profile">Profile</a></li>
+                        <li><a href="#" class = "logout">Logout</a></li>
+                    </ul>
+                </div>
+            {{/if}}
+        </div>
+    </nav>
+</template>
+
+<template name="footer">
+    <footer class = "main-botbar">
+        {{#if currentUser}}
+            <!-- Show the event add and other icons in teh footer -->
+            <div class = "container">
+                <div class = "row">
+                    <div class = "col-xs-2">
+                        <a href = "/" data-footer-eventshome><img src="homebw1.png"></a>
+                    </div>
+
+                    <!-- Currently Leaving the first few slots empty. Will slowly fill them in -->
+                    <div class = "col-xs-8"></div>
+
+                    <div class = "col-xs-2">
+                        <a href = "/eventcreation" data-footer-addevent><img src="addbw1.png"></a>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <p> CopyRight @ 2016 </p>
+        {{/if}}
+    </footer>
+</template>
+
+<template name="register">
+    <div class = "col-xs-1 col-sm-2 col-lg-4"></div>
+    <div class = "col-xs-10 col-sm-8 col-lg-4 glass-dark">
+        <form class = "form-horizontal register-form">
+            <div class = "form-group">
+                <!--<label class = "col-xs-4 col-sm-4 control-label">User Name</label>-->
+                <div class = "col-xs-12">
+                    <input class = "form-control" type = "text" data-lp-username placeholder = "User Name">
+                </div>
+            </div>
+            <div class = "form-group">
+                <!--<label class = "col-xs-4 col-sm-4 control-label">User Name</label>-->
+                <div class = "col-xs-12">
+                    <input class = "form-control" type = "text" data-lp-fullname placeholder = "Full Name">
+                </div>
+            </div>
+            <div class = "form-group">
+                <!--<label class = "col-xs-4 col-sm-4 control-label">Email Address</label>-->
+                <div class = "col-xs-12">
+                    <input class = "form-control" type = "text" data-lp-email placeholder="Email Address">
+                </div>
+            </div>
+            <div class = "form-group">
+                <!--<label class = "col-xs-4 col-sm-4 control-label">Password</label>-->
+                <div class = "col-xs-12">
+                    <input class = "form-control" type = "password" data-lp-password placeholder="Password">
+                </div>
+            </div>
+            <!--<div class = "form-group">-->
+                <!--&lt;!&ndash;<label class = "col-xs-4 col-sm-4 control-label">Confirm Password</label>&ndash;&gt;-->
+                <!--<div class = "col-xs-12">-->
+                    <!--<input class = "form-control" type = "password" data-lp-confirmpassword placeholder="Confirm Password">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class = "form-group">-->
+                <!--<label class = "col-xs-4 col-sm-4 control-label">Date of birth</label>-->
+                <!--<div class = "col-xs-8">-->
+                    <!--<input class = "form-control" type = "date" data-lp-date>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class = "form-group">
+                <!--<label class = "col-xs-4 col-sm-4 control-label">Gender</label>-->
+                <div class = "col-xs-12">
+                    <label class="radio-inline"><input type="radio" name="genderopt" value = "M" checked>Male</label>
+                    <label class="radio-inline"><input type="radio" name="genderopt" value = "F">Female</label>
+                </div>
+            </div>
+            <div class = "form-group">
+                <button type = "submit" class = "col-xs-12 btn btn-primary">Register</button>
+            </div>
+            <div class = "form-group">
+                <label class = "col-xs-12 pull-left">Existing User? <a href = "/login">Log In</a></label>
+            </div>
+        </form>
+    </div>
+    <div class = "col-xs-1 col-sm-2 col-lg-4"></div>
+</template>
+
+<template name="login">
+    <div class = "col-xs-1 col-sm-2 col-lg-4"></div>
+    <div class = "col-xs-10 col-sm-8 col-lg-4 glass-dark">
+        <form class = "form-horizontal login-form">
+            <div class = "form-group">
+                <!--<label class = "col-xs-4 col-sm-4 control-label">User Name</label>-->
+                <div class = "col-xs-12">
+                    <input class = "form-control" type = "text" placeholder = "User Name" data-lp-email>
+                </div>
+            </div>
+            <div class = "form-group">
+                <!--<label class = "col-xs-4 col-sm-4 control-label">Password</label>-->
+                <div class = "col-xs-12">
+                    <input class = "form-control" type = "password" placeholder = "Password" data-lp-password>
+                </div>
+            </div>
+            <div class = "form-group">
+                <button class = "col-xs-12 btn btn-primary">Log In</button>
+            </div>
+            <div class = "form-group">
+                <label class = "col-xs-12 pull-left">New User? <a href = "/register">Register</a></label>
+            </div>
+        </form>
+    </div>
+    <div class = "col-xs-1 col-sm-2 col-lg-4"></div>
+</template>
+

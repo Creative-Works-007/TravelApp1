@@ -1,0 +1,121 @@
+<template name="homeTemplate">
+    <div class = "col-xs-12 homeTemplate">
+        <div class = "col-sm-2 col-lg-3"></div>
+        <div class = "col-xs-12 homeSection">
+            {{> eventSummaryDummy}}
+            {{> eventSummaryDummy3}}
+        </div>
+        <div class = "col-sm-2 col-lg-3"></div>
+    </div>
+</template>
+
+<template name="eventSummaryDummy">
+    <div class = "col-xs-12 esum-eventsummary">
+        <div class = "col-xs-12 esum-destdate">
+            <div class = "col-xs-4 esum-destination pull-left">
+                <p>London</p>
+            </div>
+            <div class = "col-xs-4"></div>
+            <div class = "col-xs-4 esum-date">
+                <p class = "pull-right">23/11/2019</p>
+            </div>
+        </div>
+        <div class = "col-xs-12 esum-costinfo esum-booked">
+            <div class = "col-xs-5 esum-cost">
+                <p class = "esum-finalcost col-xs-12">Rs 44321</p>
+                <p class = "esum-savecost col-xs-12">Save 4522*</p>
+            </div>
+            <div class = "col-xs-4 esum-ppl-image">
+                <img src="32441.png" alt="Group+" class = "col-xs-2">
+                <p class = "col-xs-2">49</p>
+            </div>
+            <div class = "col-xs-3 esum-book">
+                <button type = "button" class = "col-xs-10 btn btn-default">Cancel</button>
+                <a href = "#" class = "col-xs-12">More Details</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="eventSummaryDummy2">
+    <div class = "col-xs-12 esum-eventsummary">
+        <div class = "col-xs-12 esum-destdate">
+            <div class = "col-xs-4 esum-destination pull-left">
+                <p>London</p>
+            </div>
+            <div class = "col-xs-4"></div>
+            <div class = "col-xs-4 esum-date">
+                <p class = "pull-right">23/11/2019</p>
+            </div>
+        </div>
+        <div class = "col-xs-12 esum-costinfo esum-closed">
+            <div class = "col-xs-5 esum-cost">
+                <p class = "esum-finalcost col-xs-12">Rs 44321</p>
+                <p class = "esum-savecost col-xs-12">Save 4522*</p>
+            </div>
+            <div class = "col-xs-4 esum-ppl-image">
+                <img src="32441.png" alt="Group+" class = "col-xs-2">
+                <p class = "col-xs-2">49</p>
+            </div>
+            <div class = "col-xs-3 esum-book">
+                <button type = "button" class = "col-xs-10 btn-default">Check-In</button>
+                <a href = "#" class = "col-xs-12">More Details</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="eventSummaryDummy3">
+    <div class = "col-xs-12 esum-eventsummary">
+        <div class = "col-xs-12 esum-destdate">
+            <div class = "col-xs-4 esum-destination pull-left">
+                <p>London</p>
+            </div>
+            <div class = "col-xs-4"></div>
+            <div class = "col-xs-4 esum-date">
+                <p class = "pull-right">23/11/2019</p>
+            </div>
+        </div>
+        <div class = "col-xs-12 esum-costinfo esum-open">
+            <div class = "col-xs-5 esum-cost">
+                <p class = "esum-finalcost col-xs-12">Rs 44321</p>
+                <p class = "esum-savecost col-xs-12">Save 4522*</p>
+            </div>
+            <div class = "col-xs-4 esum-ppl-image">
+                <img src="32441.png" alt="Group+" class = "col-xs-2">
+                <p class = "col-xs-2">49</p>
+            </div>
+            <div class = "col-xs-3 esum-book">
+                <button type = "button" class = "col-xs-10 btn-default">Book</button>
+                <a href = "#" class = "col-xs-12">More Details</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="eventSummary">
+    <div class = "col-xs-12 esum-eventsummary">
+        <div class = "col-xs-12 esum-destdate">
+            <div class = "col-xs-8 esum-destination pull-left">
+                <p>{{pair}}</p>
+            </div>
+            <div class = "col-xs-4 esum-date">
+                <p class = "pull-right">{{date}}</p>
+            </div>
+        </div>
+        <div class = "col-xs-12 esum-costinfo {{bookedState}}">
+            <div class = "col-xs-5 esum-cost">
+                <p class = "esum-finalcost col-xs-12">{{cost}}</p>
+                <p class = "esum-savecost col-xs-12">{{savedCost}}</p>
+            </div>
+            <div class = "col-xs-4 esum-ppl-image">
+                <img src="32441.png" alt="Group+" class = "col-xs-2">
+                <p class = "col-xs-2">{{registercount}}</p>
+            </div>
+            <div class = "col-xs-3 esum-book">
+                <button type = "button" class = "col-xs-10 btn btn-default">{{buttonText}}</button>
+                <a href = "#" class = "col-xs-10">Details</a>
+            </div>
+        </div>
+    </div>
+</template>

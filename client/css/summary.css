@@ -1,0 +1,118 @@
+.homeTemplate {
+    height: auto;
+    min-height: calc(100% - 100px);
+    width: 100%;
+    overflow: auto;
+    margin: 0;
+    position: relative;
+}
+
+.homeTemplate .homeSection{
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+div.esum-eventsummary {
+    height: 150px;
+    padding: 7px;
+    margin: 0;
+    margin-bottom: 10px;
+    background: mintcream;
+}
+
+div.esum-destdate {
+    border: solid 4px #737373;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 7px;
+}
+
+div.esum-costinfo {
+    height: 85px;
+    padding: 0;
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+div.esum-destdate .esum-destination {
+    color: #3c3c3c;
+    font-size: medium;
+    padding-left: 7px;
+    padding-right: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+div.esum-destdate .esum-date {
+    color: #3c3c3c;
+    font-size: medium;
+    padding-right: 7px;
+    padding-left: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.esum-open {
+    background: yellow;
+}
+
+.esum-closed {
+    background: mediumseagreen;
+}
+
+.esum-booked {
+    background: lightgreen;
+}
+
+div.esum-costinfo {
+    padding: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.esum-costinfo .esum-finalcost{
+    font-size: x-large;
+    color: indianred;
+}
+
+.esum-costinfo .esum-savecost{
+    font-size: medium;
+    color: darkgreen;
+}
+
+div.esum-ppl-image img {
+    height: 75px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 0;
+    padding-right: 0;
+    width: auto;
+}
+
+div.esum-ppl-image p {
+    font-weight: 600;
+    font-size: large;
+    padding: 10px;
+}
+
+div.esum-book {
+    padding: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+div.esum-book button{
+    height: 50px;
+    padding: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 0;
+    border: 0;
+}
+
+div.esum-book a {
+    font-size: 15px;
+    text-align: center;
+}
+

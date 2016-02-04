@@ -1,0 +1,185 @@
+<template name="eventcreation">
+    <div class = "container eventswindow">
+        {{> publicevent}}
+    </div>
+</template>
+
+<template name="publicevent">
+    {{> addparticipant}}
+    <div class="container eventcreation">
+        <div class="row publicevent">
+            <div class = "col-md-2"></div>
+            <div class="col-xs-12 col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading clickable">
+                        <h3 class="panel-title col-xs-8">Public Event</h3>
+                        <span class="pull-right"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                    </div>
+                    <div class="panel-body">
+                        <form class = "form-horizontal">
+                            <div class = "form-group public-type">
+                                <div class = "row">
+                                    <label class = "control-label">Travel Type:</label>
+                                    <div class = "col-xs-12">
+                                        <label class = "radio-inline"><input type = "radio" name = "public-travel-type" value = "Domestic">Domestic</label>
+                                        <label class = "radio-inline"><input type = "radio" name = "public-travel-type" value = "International" checked>International</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "form-group public-originc-destinationc">
+                                <div class = "row">
+                                    <div class = "col-xs-5">
+                                        <label class = "control-label">Src:Country</label>
+                                        <select class = "col-xs-12 publicevent-origin-country">
+                                        </select>
+                                    </div>
+                                    <div class = "col-xs-1"></div>
+                                    <div class = "col-xs-5">
+                                        <label class = "control-label">Dst:Country</label>
+                                        <select class = "col-xs-12 publicevent-destination-country"></select>
+                                    </div>
+                                    <div class = "col-xs-1"></div>
+                                </div>
+                            </div>
+                            <div class = "form-group public-src-dst">
+                                <div class = "row">
+                                    <div class = "col-xs-5">
+                                        <label class = "control-label">Src:City</label>
+                                        <select class = "col-xs-12 publicevent-source"></select>
+                                    </div>
+                                    <div class = "col-xs-1"></div>
+                                    <div class = "col-xs-5">
+                                        <label class = "control-label">Dst:City</label>
+                                        <select class = "col-xs-12 publicevent-destination"></select>
+                                    </div>
+                                    <div class = "col-xs-1"></div>
+                                </div>
+                            </div>
+                            <div class = "form-group public-departuredate">
+                                <div class = "row">
+                                    <label class = "control-label">Departure Date:</label>
+                                    <div class="input-group date col-xs-12" data-provide="datepicker">
+                                        <input type="text" class="form-control">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "form-group public-deadline">
+                                <div class = "row">
+                                    <label class = "control-label">Registration Deadline:</label>
+                                    <div class = "input-group date col-xs-12" data-provide="datepicker">
+                                        <input type="text" class="form-control col-xs-10">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-th"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "form-group public-mode">
+                                <div class = "row">
+                                    <label class = "control-label">Travel Mode:</label>
+                                    <div class = "col-xs-12">
+                                        <label class = "radio-inline"><input type = "radio" name = "public-travel-mode" value = "Air" checked>Air</label>
+                                        <label class = "radio-inline"><input type = "radio" name = "public-travel-mode" value = "Road" disabled>Road</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <div class = "row public-eventname">
+                                    <div class = "row">
+                                        <label class = "control-label">Event Name</label>
+                                        <input class = "col-xs-12" type = "text" value = "General" data-public-eventname placeholder="Event Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <div class = "row">
+                                    <label class = "control-label">Participants:</label>
+                                    <div class = "row">
+                                        <!--<div class = "col-xs-3"></div>-->
+                                        <div class = "col-xs-5" data-public-participants>
+                                            <label class = "col-xs-12 checkbox-inline"><input type = "checkbox" name = "public-participants" value = "Self" checked>Self</label>
+                                        </div>
+                                        <div class = "col-xs-4">
+                                            <a href="#" data-public-add-participant data-toggle="modal" data-target="#addParticipant"><img src = "addbw1.png" alt = "Add"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <div class = "row public-cost-range">
+                                    <div class = "row">
+                                        <div class = "col-xs-5">
+                                            <label class = "control-label">Minimum Cost</label>
+                                            <input class = "col-xs-12" type = "text" value = "0" data-public-mincost>
+                                        </div>
+                                        <div class = "col-xs-1"></div>
+                                        <div class = "col-xs-5">
+                                            <label class = "control-label">Maximum Cost</label>
+                                            <input class = "col-xs-12" type = "text" value = "99999" data-public-maxcost>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class = "form-group">
+                                <button class = "btn btn-primary form-control" data-publicevent-createbutton>Create Event</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class = "col-md-2"></div>
+        </div>
+    </div>
+</template>
+
+<template name="privateevent">
+
+</template>
+
+<template name="agencyevent">
+
+</template>
+
+<template name = "addparticipant">
+    <div class="modal fade" id="addParticipant" tabindex="-1" role="dialog" aria-labelledby="addParticipantModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addParticipantModal">Add Participant</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">Name:</label>
+                            <input type="text" class="form-control" data-participant-name>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Date of Birth:</label>
+                            <input type="date" class="form-control" data-participant-dob>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Gender:</label>
+                            <div class = "row">
+                                <label class = "radio-inline col-xs-5"><input type = "radio" name = "participantgender" value = "M" checked>Male</label>
+                                <div class = "col-xs-1"></div>
+                                <label class = "radio-inline col-xs-5"><input type = "radio" name = "participantgender" value = "F">Femle</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Address:</label>
+                            <input type="text" class="form-control" data-participant-address>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-participant-add>Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

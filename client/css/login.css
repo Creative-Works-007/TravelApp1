@@ -1,0 +1,117 @@
+/* -------------------------------------------------- */
+.load-screen,
+.load-screen .loader-icon{
+    position: relative;
+    height: 100%;
+}
+
+#viewport .container {
+    position: relative;
+    height: 100%;
+}
+
+@media only screen and (max-width: 1400px) {
+    .container {
+        width: 100%;
+    }
+}
+
+#viewport {
+    height: 100%;
+    position: relative;
+}
+
+
+div.main-container {
+    position: relative; /* needed for footer positioning*/
+    margin: 0;
+    height: 100%; /* real browsers */
+    min-height: 100%;
+    overflow: hidden;
+    margin-bottom: -40px;
+}
+
+div.main-container .main-topbar {
+    height: 60px;
+    width: 100%;
+    position: relative;
+    margin: 0;
+}
+
+.main-container .content-container {
+    height: calc(100% - 100px);
+    /*min-height: calc(100% - 100px);*/
+    width: 100%;
+    overflow: auto;
+    margin: 0;
+    /*position: relative;*/
+    /*padding-top: 20px;*/
+}
+
+.main-container .main-topbar .navbar-brand {
+    padding: 0;
+    height: 60px;
+}
+
+div.main-container .main-topbar h2 {
+    padding-top: 15px;
+    height: 60px;
+    font-size: x-large;
+}
+
+.main-container .main-topbar .navbar-brand img {
+    /*padding-left: 15px;*/
+}
+
+.main-container .main-topbar .navbar-brand img {
+    height: 60px;
+    width: auto;
+    max-width: 100%;
+}
+
+footer.main-botbar{
+    position: relative;
+    height: 40px;
+    width: 100%;
+    bottom: 0;
+    margin: 0;
+    background-color: lightblue;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+    box-sizing: border-box;
+}
+
+footer.main-botbar p{
+    padding-top: 15px;
+    color: #761c19;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+footer.main-botbar img {
+    height: 50px;
+    width: auto;
+    margin-top: -10px;
+}
+
+.register-form {
+    padding: 20px 25px;
+    color: black;
+}
+
+.login-form {
+    padding: 20px 25px;
+    color: black;
+}
+
+.settings-button {
+    padding: 10px;
+}
+
+.settings-button:hover {
+    cursor: hand;
+}
+
+.settings-button img{
+    height: 60px;
+    width: auto;
+}

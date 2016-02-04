@@ -1,0 +1,17 @@
+<template name="main">
+    <div class = "main-container">
+        {{> navigation}}
+        <div class = "content-container  glass-dark-sharp">
+            {{> yield}}
+        </div>
+    </div>
+    {{> footer}}
+</template>
+
+<template name="home">
+    {{#if currentUser}}
+        {{> homeTemplate}}
+    {{else}}
+        {{> login}}
+    {{/if}}
+</template>
