@@ -20,7 +20,15 @@ TravelApp.Sabre = {
 
     TokenObtained: false,
 
+    MultiFuture: 1,
+
+    DBTriggersInitialized: false,
+
+    PassengerCodeChecks: ["AGT", "JCB", "GRP", "ADT", "VAG"],
+
     Cities: [],
+
+    FlightInfos: {},
 
     Init: function(){
         TravelApp.Sabre.GetAllCities();
@@ -63,6 +71,67 @@ TravelApp.Sabre = {
                     data = data.data || {};
                     if("Cities" in data) {
                         TravelApp.Sabre.Cities = data.Cities;
+
+                        if(!TravelApp.Sabre.DBTriggersInitialized){
+                            GPublicEventsCursor.observe({
+                                added: function(document){
+                                    var eventID = TravelApp.Sabre.GetItenaryPrices(document.source, document.destination, document.booked.length, document.departureDate, document.eventID);
+                                    TravelApp.Sabre.FlightInfos = TravelApp.Sabre.FlightInfos || {};
+                                    console.log(TravelApp.Sabre.FlightInfos);
+                                    if(TravelApp.Sabre.FlightInfos.eventID.Options.length > 0){
+                                        if(GPublicEvents.find({eventID: eventID}).fetch().length > 0){
+                                            var costall = 99999, costind = 99;
+                                            if(TravelApp.Sabre.FlightInfos.eventID.Options.length > 0){
+                                                var len = TravelApp.Sabre.FlightInfos.eventID.Options.length;
+                                                for(var k = 0; k < len; k++){
+                                                    if(TravelApp.Sabre.FlightInfos.eventID.Options[k].TotalFare < costall){
+                                                        costall = TravelApp.Sabre.FlightInfos.eventID.Options[k].TotalFare;
+                                                        costind = TravelApp.Sabre.FlightInfos.eventID.Options[k].TotalFare / TravelApp.Sabre.FlightInfos.eventID.Options[k].PassengerCount;
+                                                    }
+                                                }
+                                            }
+                                            GPublicEvents.update({eventID: eventID}, {
+                                                $set: {
+                                                    itineraries: TravelApp.Sabre.FlightInfos.eventID.Options,
+                                                    currentCombPrice: costall,
+                                                    currentIndPrice: costind,
+                                                    currency: TravelApp.Sabre.FlightInfos.eventID.Options[0].CurrencyCode
+                                                }
+                                            });
+                                        }
+                                    }
+                                },
+
+                                changed: function(document){
+                                    var eventID = TravelApp.Sabre.GetItenaryPrices(document.source, document.destination, document.booked.length, document.departureDate, document.eventID);
+                                    TravelApp.Sabre.FlightInfos = TravelApp.Sabre.FlightInfos || {};
+                                    if(TravelApp.Sabre.FlightInfos.eventID.Options.length > 0){
+                                        if(GPublicEvents.find({eventID: eventID}).fetch().length > 0){
+                                            var costall = 99999, costind = 99;
+                                            if(TravelApp.Sabre.FlightInfos.eventID.Options.length > 0){
+                                                var len = TravelApp.Sabre.FlightInfos.eventID.Options.length;
+                                                for(var k = 0; k < len; k++){
+                                                    if(TravelApp.Sabre.FlightInfos.eventID.Options[k].TotalFare < costall){
+                                                        costall = TravelApp.Sabre.FlightInfos.eventID.Options[k].TotalFare;
+                                                        costind = TravelApp.Sabre.FlightInfos.eventID.Options[k].TotalFare / TravelApp.Sabre.FlightInfos.eventID.Options[k].PassengerCount;
+                                                    }
+                                                }
+                                            }
+                                            GPublicEvents.update({eventID: eventID}, {
+                                                $set: {
+                                                    itineraries: TravelApp.Sabre.FlightInfos.eventID.Options,
+                                                    currentCombPrice: costall,
+                                                    currentIndPrice: costind,
+                                                    currency: TravelApp.Sabre.FlightInfos.eventID.Options[0].CurrencyCode
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            });
+
+                            TravelApp.Sabre.DBTriggersInitialized = true;
+                        }
                     }
                 }
             }
@@ -81,7 +150,6 @@ TravelApp.Sabre = {
                         TravelApp.Sabre.OriginCountries = data.OriginCountries;
                     }
                     if(typeof data == "object" && "DestinationCountries" in data) {
-                        console.log("Setting DC" + data.DestinationCountries.length);
                         TravelApp.Sabre.DestinationCountries = data.DestinationCountries;
                     }
                 }
@@ -164,72 +232,6 @@ TravelApp.Sabre = {
         }
     },
 
-    GetTop50DestinationsSync: function(origin, destinationCountry, destinationRegion, destinationType, lookback) {
-        origin = TravelApp.Sabre.GetCityCodeFromName(origin);
-
-        destinationCountry = TravelApp.Sabre.GetCountryCode(destinationCountry);
-
-        if(origin != "" || origin != undefined){
-            var params = {
-                origin: origin
-            };
-
-            if(destinationRegion){
-                params.destinationregion = destinationRegion;
-            }
-            if(destinationType) {
-                params.destinationtype = destinationType.toLowerCase();
-                if(destinationType.toUpperCase() != "DOMESTIC") {
-                    if(destinationCountry){
-                        params.destinationcountry = destinationCountry;
-                    }else{
-
-                    }
-                }
-            }
-            if(lookback){
-                params.lookbackweeks = lookback;
-            }else{
-                params.lookbackweeks = '8';
-            }
-
-            var convertToSync = Meteor.wrapAsync(HTTP.get);
-
-            var result = convertToSync("https://api.test.sabre.com/v1/lists/top/destinations", {
-                headers: {
-                    authorization: TravelApp.Sabre.AccessTokenType + " " + TravelApp.Sabre.AccessToken
-                },
-                params: params
-            }, function(error, data) {
-                if(data != null && typeof data == "object"){
-                    data = data.data || {};
-                    if("error" in data){
-                        return [];
-                    }else if("OriginLocation" in data){
-                        var list = [];
-                        data.Destinations = data.Destinations || [];
-                        var size = data.Destinations.length;
-                        for(var i = 0; i < size; i++) {
-                            if(typeof data.Destinations[i] == "object" && "Destination" in data.Destinations[i]){
-                                if("MetropolitanAreaName" in data.Destinations[i]["Destination"]){
-                                    list.push(data.Destinations[i]["Destination"]["MetropolitanAreaName"]);
-                                }else if("CityName" in data.Destinations[i]["Destination"]){
-                                    list.push(data.Destinations[i]["Destination"]["CityName"]);
-                                }
-                            }
-                        }
-                        console.log("The List");
-                        return list;
-                    }else{
-                        return [];
-                    }
-                }
-            });
-
-            console.log(result);
-        }
-    },
-
     GetTop50DestinationsSyncFuture: function(origin, destinationCountry, destinationRegion, destinationType, lookback) {
         origin = TravelApp.Sabre.GetCityCodeFromName(origin);
 
@@ -277,10 +279,23 @@ TravelApp.Sabre = {
                         var size = data.Destinations.length;
                         for(var i = 0; i < size; i++) {
                             if(typeof data.Destinations[i] == "object" && "Destination" in data.Destinations[i]){
+                                var pushed = false;
                                 if("MetropolitanAreaName" in data.Destinations[i]["Destination"]){
+                                    pushed = true;
                                     list.push(data.Destinations[i]["Destination"]["MetropolitanAreaName"]);
                                 }else if("CityName" in data.Destinations[i]["Destination"]){
+                                    pushed = true;
                                     list.push(data.Destinations[i]["Destination"]["CityName"]);
+                                }
+
+                                if(pushed){
+                                    var code = TravelApp.Sabre.GetCityCodeFromName(list[list.length - 1]);
+                                    if(code == ""){
+                                        var obj = {};
+                                        obj.name = list[list.length - 1];
+                                        obj.code = data.Destinations[i]["Destination"]["CityName"]["DestinationLocation"];
+                                        TravelApp.Sabre.Cities.push(obj);
+                                    }
                                 }
                             }
                         }
@@ -363,4 +378,163 @@ TravelApp.Sabre = {
         return list;
     },
 
+    GetItenaryPrices: function(origin, destination, passengercount, departureDate, eventID) {
+        var postJSON = {};
+        postJSON.OTA_AirLowFareSearchRQ = {};
+
+        var tempObj = {};
+
+        origin = TravelApp.Sabre.GetCityCodeFromName(origin);
+        destination = TravelApp.Sabre.GetCityCodeFromName(destination);
+
+        // -- Frame the origin dest obj --
+        postJSON.OTA_AirLowFareSearchRQ.OriginDestinationInformation = [];
+        tempObj = {};
+        departureDate = departureDate || [0, 0, 0];
+        departureDate = departureDate.split("/");
+        departureDate = departureDate[2] + "-" + departureDate[0] + "-" + departureDate[1];
+        tempObj.DepartureDateTime = departureDate + "T" + "00:00:00";
+        tempObj.OriginLocation = {
+            LocationCode: origin
+        };
+        tempObj.DestinationLocation = {
+            LocationCode: destination
+        };
+
+        postJSON.OTA_AirLowFareSearchRQ.OriginDestinationInformation.push(tempObj);
+
+        // -- The POS param --
+        postJSON.OTA_AirLowFareSearchRQ.POS = {
+            "Source": [
+                {
+                    "RequestorID": {
+                        "CompanyName": {
+                            "Code": "TN"
+                        },
+                        "ID": "REQ.ID",
+                        "Type": "0.AAA.X"
+                    }
+                }
+            ]
+        };
+
+        postJSON.OTA_AirLowFareSearchRQ.TPA_Extensions = {
+            "IntelliSellTransaction": {
+                "RequestType": {
+                    "Name": "50ITINS"
+                }
+            }
+        };
+
+        postJSON.OTA_AirLowFareSearchRQ.TravelPreferences = {
+            "TPA_Extensions": {
+                "NumTrips": {
+                    "Number": 5
+                }
+            }
+        };
+
+        var future = new Future();
+
+        TravelApp.Sabre.FlightInfos = TravelApp.Sabre.FlightInfos || {};
+        TravelApp.Sabre.FlightInfos.eventID = TravelApp.Sabre.FlightInfos.eventID || {};
+        TravelApp.Sabre.FlightInfos.eventID.Options = [];
+
+        TravelApp.Sabre.MultiFuture = TravelApp.Sabre.PassengerCodeChecks.length;
+
+        for(var i = 0; i < TravelApp.Sabre.PassengerCodeChecks.length; i++){
+
+            postJSON.OTA_AirLowFareSearchRQ.TravelerInfoSummary= {
+                "AirTravelerAvail": [
+                    {
+                        "PassengerTypeQuantity": [
+                            {
+                                "Code": TravelApp.Sabre.PassengerCodeChecks[i],
+                                "Quantity": passengercount
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            // -- Now, send the Rest API --
+            HTTP.call("POST", "https://api.test.sabre.com/v1.9.2/shop/flights?mode=live", {
+                data: postJSON,
+                headers: {
+                    "content-type": "application/json",
+                    authorization: TravelApp.Sabre.AccessTokenType + " " + TravelApp.Sabre.AccessToken
+                }
+            }, function(error, result){
+                if(error){
+                    console.log("POST ERROR\n" + error);
+                }else{
+                    result = result || {};
+                    if("OTA_AirLowFareSearchRS" in result){
+                        if("PricedItineraries" in result.OTA_AirLowFareSearchRS){
+                            if("PricedItinerary" in result.OTA_AirLowFareSearchRS.PricedItineraries){
+                                var iLength = result.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary.length;
+                                for(var i = 0; i < iLength; i++){
+                                    var obj = {};
+
+                                    result.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary = result.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary || [];
+                                    if(result.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary[i].keys().length > 0){
+                                        var OriginDestOptions = result.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary[i].AirItinerary.OriginDestinationOptions || {};
+
+                                        OriginDestOptions.OriginDestinationOption = OriginDestOptions.OriginDestinationOption || [];
+
+                                        if(OriginDestOptions.OriginDestinationOption.length > 0){
+                                            OriginDestOptions.OriginDestinationOption = OriginDestOptions.OriginDestinationOption[0];
+                                            OriginDestOptions.OriginDestinationOption.FlightSegment = OriginDestOptions.OriginDestinationOption.FlightSegment || [];
+
+                                            var segments = OriginDestOptions.OriginDestinationOption.FlightSegment.length;
+                                            if(segments.length > 0){
+                                                obj.stops = segments - 1;
+                                                obj.segments = [];
+
+                                                for(var j = 0; j < segments; j++){
+                                                    var segmentObj = OriginDestOptions.OriginDestinationOption.FlightSegment[j];
+                                                    var tObj = {};
+
+                                                    tObj.DepartureDateTime = segmentObj.DepartureDateTime;
+                                                    tObj.ArrivalDateTime = segmentObj.ArrivalDateTime;
+                                                    tObj.FlightNumber = segmentObj.FlightNumber;
+                                                    tObj.DepartureAirport = segmentObj.DepartureAirport;
+                                                    tObj.ArrivalAirport = segmentObj.ArrivalAirport;
+                                                    tObj.OperatingAirline = segmentObj.OperatingAirline;
+                                                    tObj.Equipment = segmentObj.Equipment;
+
+                                                    obj.segments.push(tObj);
+                                                }
+                                            }
+
+                                            OriginDestOptions = result.OTA_AirLowFareSearchRS.PricedItineraries.PricedItinerary[i].AirItineraryPricingInfo || [];
+
+                                            if(OriginDestOptions.length > 0){
+                                                OriginDestOptions = OriginDestOptions[0];
+
+                                                obj.PassengerCount = OriginDestOptions.PTC_FareBreakdowns.PTC_FareBreakdown[0].PassengerTypeQuantity.Quantity;
+                                                obj.TotalBaseFare = OriginDestOptions.ItinTotalFare.BaseFare.Amount;
+                                                obj.CurrencyCode = OriginDestOptions.ItinTotalFare.BaseFare.CurrencyCode;
+                                                obj.TotalFare = OriginDestOptions.ItinTotalFare.TotalFare.Amount;
+                                                obj.FarePerHead = OriginDestOptions.ItinTotalFare.TotalFare.Amount / OriginDestOptions.PTC_FareBreakdowns.PTC_FareBreakdown[0].PassengerTypeQuantity.Quantity;
+                                            }
+                                        }
+                                    }
+
+                                    TravelApp.Sabre.FlightInfos.eventID.Options.push(obj);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                TravelApp.Sabre.MultiFuture--;
+                if(TravelApp.Sabre.MultiFuture <= 0){
+                    future.return(eventID);
+                }
+            });
+        }
+
+        return future.wait();
+    }
 };

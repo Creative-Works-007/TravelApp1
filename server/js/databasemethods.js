@@ -2,24 +2,6 @@
  * Created by Creative Works on 2/3/2016.
  */
 
-GUserData = "";
-
-// -- Create the user data collection --
-if(Mongo.Collection.get("UserData") == null || Mongo.Collection.get("UserData") == undefined) {
-    GUserData = new Mongo.Collection("UserData");
-} else {
-    GUserData = Mongo.Collection.get("UserData");
-}
-
-GPublicEvents = "";
-
-// -- Create the public events collection --
-if(Mongo.Collection.get("PublicEvents") == null || Mongo.Collection.get("PublicEvents") == undefined) {
-    GPublicEvents = new Mongo.Collection("PublicEvents");
-} else {
-    GPublicEvents = Mongo.Collection.get("PublicEvents");
-}
-
 Meteor.methods({
     "insertUserData": function(email, gender, fullname){
         var currentUser = Meteor.userId();
@@ -45,15 +27,55 @@ Meteor.methods({
             publicObj.booked.push(currentUser);
         }
         publicObj.createdBy = currentUser;
-        publicObj.eventID = "PUBLIC"+publicObj.createdBy+publicObj.destination+publicObj.source+publicObj.departureDate;
+        var dString = publicObj.departureDate.split("/").join("");
+        publicObj.eventID = "PUBLIC"+publicObj.createdBy+publicObj.destination+publicObj.source+dString;
+        publicObj.eventID.split(" ").join("");
         publicObj.currentCombPrice = "";
         publicObj.currentIndPrice = "";
+        publicObj.currency = "US";
+        publicObj.itineraries = "";
 
         if(GPublicEvents != "") {
-            if(GPublicEvents.find({"eventID": publicObj.eventID}).fecth().length > 0){
-
+            if(GPublicEvents.find({"eventID": publicObj.eventID}).fetch().length > 0){
+                return "A similar event already exists";
             }else {
-                GPublicEvents.insert(publicObj);
+                var writeOp = GPublicEvents.insert(publicObj);
+                return "Event has been created successfully.";
+            }
+        }
+    },
+
+    'registerForPublicEvent': function(id){
+        var currentUser = Meteor.userId();
+
+        if(GPublicEvents != "") {
+            if(GPublicEvents.find({"eventID": id}).fetch().length > 0){
+                var event = GPublicEvents.find({"eventID": id}).fetch();
+                if(event.length > 0){
+                    event = event[0]; // -- Coz, ideally we should be having only one such doc + timei s short ..:)
+                    event.booked.push(currentUser);
+
+                    GPublicEvents.update({eventID: id}, {$set:{booked: event.booked}});
+                }
+            }
+        }
+    },
+
+    'unregisterForPublicEvent': function(id){
+        var currentUser = Meteor.userId();
+
+        if(GPublicEvents != "") {
+            if(GPublicEvents.find({"eventID": id}).fetch().length > 0){
+                var event = GPublicEvents.find({"eventID": id}).fetch();
+                if(event.length > 0){
+                    event = event[0]; // -- Coz, ideally we should be having only one such doc + timei s short ..:)
+
+                    if(event.booked.indexOf(currentUser) >= 0){
+                        event.booked.splice(event.booked.indexOf(currentUser), 1);
+
+                        GPublicEvents.update({eventID: id}, {$set:{booked: event.booked}});
+                    }
+                }
             }
         }
     },
@@ -71,7 +93,8 @@ Meteor.methods({
                     // -- Do Not Give
                 } else {
                     var obj = {};
-                    obj.booked = (events[i].booked.indexOf(userid) > 0)?(true):false;
+                    obj.booked = (events[i].booked.indexOf(userid) >= 0)?(true):false;
+                    obj.eventID = events[i].eventID;
                     obj.source = events[i].source;
                     obj.destination = events[i].destination;
                     obj.departureDate = events[i].departureDate;

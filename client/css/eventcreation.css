@@ -72,6 +72,32 @@ div.eventswindow .panel-heading span {
     padding-right: 7px;
 }
 
+div.eventcrheading {
+    height: auto;
+    overflow: auto;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffdaaa+0,fb9d23+30,fb9d23+71,f9d7ac+100 */
+    background: rgb(255,218,170); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(255,218,170,1) 0%, rgba(251,157,35,1) 30%, rgba(251,157,35,1) 71%, rgba(249,215,172,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(255,218,170,1) 0%,rgba(251,157,35,1) 30%,rgba(251,157,35,1) 71%,rgba(249,215,172,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(255,218,170,1) 0%,rgba(251,157,35,1) 30%,rgba(251,157,35,1) 71%,rgba(249,215,172,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffdaaa', endColorstr='#f9d7ac',GradientType=1 ); /* IE6-9 */
+}
+
+div.eventcrheading label{
+    font-family: 'Lato', sans-serif;
+    font-size: 1.25em;
+    font-weight: 600;
+    color: mintcream;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+div.eventcrheading-underline {
+    background: #333399;
+    background: linear-gradient(left, transparent 0%,#333399 50%,transparent 100%);;
+}
+
 .eventcreation .panel-heading {
     height: 50px;
     text-align: center;

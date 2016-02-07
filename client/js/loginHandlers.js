@@ -73,8 +73,8 @@ Template.register.events({
                 Meteor.call("insertUserData", email, gender, fullname);
             }
         });
-        Router.go('home');
         ShowLoader();
+        Router.go('home');
     },
 
     "keyup [data-lp-username]": function() {
@@ -106,16 +106,19 @@ Template.login.events({
     "submit form": function(event) {
         event.preventDefault();
 
+        ShowLoader();
+
         $('.login-form .error-message').remove();
 
         var email = $('[data-lp-email]').val();
         var password = $('[data-lp-password]').val();
 
         Meteor.loginWithPassword(email, password, function(error){
+            HideLoader();
             if(error) {
                 TravelApp.Index.DisplayStatusSibling('.login-form button', error.reason);
             } else {
-                //ShowLoader();
+                $("div.content-container").removeClass("glass glass-dark glass-dark-sharp").addClass("glass=dark-sharp");
             }
         });
     },

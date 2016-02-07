@@ -53,6 +53,18 @@ div.main-container .main-topbar {
     height: 60px;
 }
 
+div.register .form-container {
+    margin-top: 20%;
+}
+
+div.register .radio-inline {
+    color: white;
+}
+
+div.login .form-container {
+    margin-top: 25%;
+}
+
 div.main-container .main-topbar h2 {
     padding-top: 15px;
     height: 60px;

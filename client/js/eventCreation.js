@@ -81,6 +81,105 @@ TravelApp.EventCreation = {
         }
     },
 
+    PublicEventFormReset: function(){
+
+    },
+
+    PublicEventFormValidation: function(){
+        var listOfErrors = [], value = "";
+
+        value = $(".publicevent-destination").val();
+        if(value == "" || value == null){
+            listOfErrors.push("Please select a destination city");
+        }
+
+        value = $(".publicevent-source").val();
+        if(value == "" || value == null){
+            listOfErrors.push("Please select a source city");
+        }
+
+        value = $(".public-departuredate input").val();
+        if(value == "" || value == null){
+            listOfErrors.push("Please select a departure date");
+        }
+
+        value = $(".public-deadline input").val();
+        if(value == "" || value == null){
+            listOfErrors.push("Please select a registration deadline");
+        }else{
+            var dep = $(".public-departuredate input").val();
+            if(dep != "" || dep != ""){
+                var depSplit = dep.split("/") || [];
+                var dedSplit = value.split("/") || [];
+
+                var valid = false;
+
+                if(depSplit.length < 3){
+                    var m = 3 - depSplit.length;
+                    for(var i = 0; i < m; i++){
+                        depSplit.push(0);
+                    }
+                }
+
+                if(dedSplit.length < 3){
+                    var m = 3 - dedSplit.length;
+                    for(var i = 0; i < m; i++){
+                        dedSplit.push(0);
+                    }
+                }
+
+                for(var i = 0; i < 3; i++){
+                    if(Number(depSplit[i]) == NaN){
+                        depSplit[i] = 0;
+                    }
+                    if(Number(dedSplit[i]) == NaN){
+                        dedSplit[i] = 0;
+                    }
+                }
+
+                if(Number(depSplit[2]) >= Number(dedSplit[2])){
+                    if(Number(depSplit[1] > Number(depSplit[1]))){
+                        valid = true;
+                    }else if(Number(depSplit[1] == Number(depSplit[1]))){
+                        if(Number(depSplit[0]) >= Number(depSplit[0])){
+                            valid = true;
+                        }
+                    }
+                }
+            }
+
+            if(!valid){
+                listOfErrors.push("The Registration Deadline cannot be beyond the departure date")
+            }
+        }
+
+        value = $(".public-eventname input").val();
+        if(value == "" || value == null){
+            listOfErrors.push("The event name cannot be left blank");
+        }
+
+        value = $("[data-public-mincost]").val();
+        if(value == "" || value == null){
+            listOfErrors.push("The min cost cannot be left blank");
+        }
+
+        value = $("[data-public-maxcost]").val();
+        if(value == "" || value == null){
+            listOfErrors.push("The max cost cannot be left blank");
+        }else{
+            var numax = Number(value), numin = Number($(".public-eventname input").val());
+
+            //numax = ($.isNaN(numax))?(9999):(numax);
+            //numin = ($.isNaN(numin))?(0):(numin);
+
+            if(numax < numin){
+                listOfErrors.push("The max cost cannot be less than the min cost");
+            }
+        }
+
+        return listOfErrors;
+    },
+
     PublicSourceCitySelected: function(event){
         var sourceCity = $("select.publicevent-source").val();
 
@@ -127,37 +226,74 @@ TravelApp.EventCreation = {
                 }
             });
         }
+
     },
 
     PublicEventCreate: function(event) {
-        var newEvent = {};
+        var errors = TravelApp.EventCreation.PublicEventFormValidation();
+        if(errors.length > 0){
+            var listHTML = [];
+            for(var i = 0; i < errors.length; i++){
+                listHTML[i] = {};
+                listHTML[i].error = errors[i];
+            }
 
-        newEvent.destination = $(".publicevent-destination").val();
-        newEvent.source = $(".publicevent-source").val();
-        newEvent.departureDate = $(".public-departuredate input").val();
-        newEvent.deadline = $(".public-deadline input").val();
-        newEvent.mode = $(".public-mode input[type = 'radio'][name = 'public-travel-mode']:checked").val();
-        newEvent.eventName = $(".public-eventname input").val();
-        newEvent.mincost = $("[data-public-mincost]").val();
-        newEvent.maxcost = $("[data-public-maxcost]").val();
-        newEvent.booked = [];
-        newEvent.cancelled = [];
-        newEvent.rejected = [];
-        newEvent.participants = [];
-        var tempParticipants = $("[data-public-participants] input");
-        for(var i = 0; i < tempParticipants.length; i++) {
-            if($(tempParticipants[i]).prop("checked") == true){
-                var uname = $(tempParticipants[i]).parent().text();
-                if(uname.toUpperCase() == "SELF"){
-                    // -- Get the user name for the specified Uesr ID --
-                    newEvent.participants.push("self");
-                }else {
-                    newEvent.participants.push(uname);
+            Blaze.renderWithData(Template.formerrors, {
+                listoferrors: listHTML
+            }, $('.publicevent')[0]);
+
+            $('.publicevent #formerrors').modal();
+        }else{
+            var newEvent = {};
+
+            newEvent.destination = $(".publicevent-destination").val();
+            newEvent.source = $(".publicevent-source").val();
+            newEvent.departureDate = $(".public-departuredate input").val();
+            newEvent.deadline = $(".public-deadline input").val();
+            newEvent.mode = $(".public-mode input[type = 'radio'][name = 'public-travel-mode']:checked").val();
+            newEvent.eventName = $(".public-eventname input").val();
+            newEvent.mincost = $("[data-public-mincost]").val();
+            newEvent.maxcost = $("[data-public-maxcost]").val();
+            newEvent.booked = [];
+            newEvent.cancelled = [];
+            newEvent.rejected = [];
+            newEvent.participants = [];
+            var tempParticipants = $("[data-public-participants] input");
+            for(var i = 0; i < tempParticipants.length; i++) {
+                if($(tempParticipants[i]).prop("checked") == true){
+                    var uname = $(tempParticipants[i]).parent().text();
+                    if(uname.toUpperCase() == "SELF"){
+                        // -- Get the user name for the specified Uesr ID --
+                        newEvent.participants.push("self");
+                    }else {
+                        newEvent.participants.push(uname);
+                    }
                 }
             }
-        }
 
-        Meteor.call("createPublicEvent", newEvent);
+            Meteor.call("createPublicEvent", newEvent, function(error, result){
+                if(error){
+
+                }else{
+                    if(typeof result == "string"){
+
+                    }else if(typeof  result == "boolean"){
+                        if(result){
+                            result = "Event has been created successfully."
+                        }
+                        else{
+                            result = "OOPS!!.. SOmething has gone wrong. Please try again."
+                        }
+                    }
+
+                    Blaze.renderWithData(Template.eventcrstatus, {
+                        status: result
+                    }, $('.publicevent')[0]);
+
+                    $('.publicevent #eventcrstatus').modal();
+                }
+            });
+        }
     }
 };
 
@@ -175,15 +311,6 @@ Template.publicevent.events = {
     "change input[type='radio'][name = 'public-travel-type']": function(event){
         TravelApp.EventCreation.PublicTravelTypeChanged(event);
     },
-
-    //"change select.publicevent-origin-country": function(event) {
-    //    console.log("The Change Event Firing UP");
-    //    TravelApp.EventCreation.PublicSourceCountrySelected(event);
-    //},
-    //
-    //"change .publicevent-destination-country": function(event) {
-    //
-    //},
 };
 
 Template.publicevent.rendered = function(){
@@ -246,4 +373,24 @@ Template.publicevent.rendered = function(){
         event.preventDefault();
         TravelApp.EventCreation.PublicEventCreate(event);
     });
+};
+
+Template.formerrors.events = {
+    "click [data-formerror-okay]": function(event){
+        $('#formerrors').modal('hide');
+    },
+
+    "hidden.bs.modal #formerrors": function(event){
+        $('#formerrors').remove();
+    }
+};
+
+Template.eventcrstatus.events = {
+    "click [data-eventcrstatus-okay]": function(event){
+        $("#eventcrstatus").modal('hide');
+    },
+
+    "hidden.bs.modal #eventcrstatus": function(event){
+        $('#eventcrstatus').remove();
+    }
 };

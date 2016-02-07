@@ -94,7 +94,7 @@
 </template>
 
 <template name="eventSummary">
-    <div class = "col-xs-12 esum-eventsummary">
+    <div class = "col-xs-12 esum-eventsummary" id = "{{identifier}}">
         <div class = "col-xs-12 esum-destdate">
             <div class = "col-xs-8 esum-destination pull-left">
                 <p>{{pair}}</p>
@@ -113,8 +113,29 @@
                 <p class = "col-xs-2">{{registercount}}</p>
             </div>
             <div class = "col-xs-3 esum-book">
-                <button type = "button" class = "col-xs-10 btn btn-default">{{buttonText}}</button>
+                <button type = "button" class = "col-xs-10 btn btn-default" {{buttonData}}>{{buttonText}}</button>
                 <a href = "#" class = "col-xs-10">Details</a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name = "eventdetails">
+    <div class = "row eventdetails">
+        <div class="modal fade" id="eventdetails" tabindex="-1" role="dialog" aria-labelledby="eventdetails">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        {{#each itineraries}}
+                            <div class = "itinerary">
+
+                            </div>
+                        {{/each}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-eventcrstatus-okay>Okay</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

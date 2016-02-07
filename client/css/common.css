@@ -46,15 +46,19 @@ select {
     vertical-align: middle;
 }
 
+div.modal-body {
+    padding-top: 20px;
+}
+
 p.error-message {
-    color: red;
+    color: mintcream;
     padding-top: 5px;
     margin: 0;
     font-size: medium;
 }
 
 p.form-error-message {
-    color: red;
+    color: mintcream;
     font-size: large;
     margin: 0;
     padding-top: 10px;
@@ -85,7 +89,7 @@ p.form-error-message {
     width: 60px;
 }
 .main-container {
-    background-image: url("wwall.jpg");
+    background-image: url("tpattern2.jpg");
     background-repeat: repeat;
 }
 
