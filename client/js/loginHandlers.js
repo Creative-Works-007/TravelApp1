@@ -19,7 +19,6 @@ TravelApp.Index = {
     },
 
     OCRegisterForm: function() {
-        console.log("Are you being hit");
         if($('.register-form p.error-message').length > 0){
             $('.register-form button').prop("disabled", true);
         } else {

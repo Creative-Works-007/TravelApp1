@@ -29,7 +29,7 @@ Meteor.methods({
         publicObj.createdBy = currentUser;
         var dString = publicObj.departureDate.split("/").join("");
         publicObj.eventID = "PUBLIC"+publicObj.createdBy+publicObj.destination+publicObj.source+dString;
-        publicObj.eventID.split(" ").join("");
+        publicObj.eventID = publicObj.eventID.split(" ").join("");
         publicObj.currentCombPrice = "";
         publicObj.currentIndPrice = "";
         publicObj.currency = "US";
